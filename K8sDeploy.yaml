@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: java-sample
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: java-sample
+    spec:
+      containers:
+      - image: marcelferry/java-sample:__BUILDNUMBER__
+        name: java-sample
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+        - name: acrcredentials
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: java-sample
+spec:
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  selector:
+    app: java-sample
+  type: LoadBalancer
